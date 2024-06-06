@@ -16,9 +16,10 @@ piece_alt = {
 
 
 class Board:
+    turn = 'white'
 
     def __init__(self):
-        squares = []
+        self.squares = []
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
             for number in range(1, 9):
                 piece = None
@@ -34,4 +35,27 @@ class Board:
                 elif number == 8:
                     cord = (letter_alt[letter], 7)
                     piece = piece_alt[letter]('black', cord)
-                squares.append(Square(letter, number, piece))
+                self.squares.append(Square(letter, number, piece))
+
+    def get_square(self, cord: tuple) -> Square:
+        if cord[0] > 7 or cord[1] > 7:
+            raise ValueError('cord must be in (0-7, 0-7)')
+        square = next(filter(lambda x: x.cord == cord, self.squares))
+        return square
+
+    def move(self, start: tuple, target: tuple) -> bool:
+        if start[0] > 7 or start[1] > 7 or target[0] > 7 or target[1] > 7:
+            raise ValueError('cord must be in (0-7, 0-7)')
+        if not (piece := self.get_square(start).piece):
+            return False
+
+        ...
+
+    def get_turn(self):
+        return self.turn
+
+    def is_in_check(self):
+        ...
+
+    def is_in_check_mate(self):
+        ...
