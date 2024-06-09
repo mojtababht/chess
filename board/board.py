@@ -20,6 +20,7 @@ class Board:
 
     def __init__(self):
         self.squares = []
+        self.pieces = []
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
             for number in range(1, 9):
                 piece = None
@@ -35,6 +36,8 @@ class Board:
                 elif number == 8:
                     cord = (letter_alt[letter], 7)
                     piece = piece_alt[letter]('black', cord)
+                if piece:
+                    self.pieces.append(piece)
                 self.squares.append(Square(letter, number, piece))
 
     def get_square(self, cord: tuple) -> Square:
