@@ -18,9 +18,9 @@ class King(Piece):
         else:
             for cord in product(possible_x, possible_y):  #combination of possible_x and possible_y
                 square = board.get_square(cord)
-                if not square.piece:
+                if square.piece:
                     if not square.piece.color == self.color:
                         moves.append(square)
-                    break
+                    continue
                 moves.append(square)
         return moves
