@@ -4,7 +4,7 @@ from .piece import Piece
 class Bishop(Piece):
     symbol = 'b'
 
-    def valid_moves(self, board: Board) -> list:
+    def valid_moves(self, board: Board) -> list:#TODO: check "check status" after move
         moves = []
         if board.is_in_check():
             ...
