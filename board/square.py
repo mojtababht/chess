@@ -4,11 +4,11 @@ from . import letter_alt
 class Square:
 
     def __init__(self, letter, number, piece=None):
-        letter = letter
-        number = number
-        cord = self.get_cord()
-        color = self.get_color()
-        piece = piece
+        self.letter = letter
+        self.number = number
+        self.cord = self.get_cord()
+        self.color = self.get_color()
+        self.piece = piece
 
 
     def get_cord(self):
