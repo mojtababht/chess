@@ -5,8 +5,6 @@ class Bishop(Piece):
     symbol = 'b'
 
     def valid_moves(self, board: Board) -> list:
-        filled_cords = list(map(lambda piece: piece.cord, board.pieces))
-        filled_cords.remove(self.cord)
         moves = []
         if board.is_in_check():
             ...
