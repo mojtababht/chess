@@ -7,7 +7,7 @@ from .piece import Piece
 class King(Piece):
     symbol = 'K'
 
-    def valid_moves(self, board: Board) -> list:#TODO: check "check status" after move
+    def valid_moves(self, board: Board) -> list:  #TODO: check "check status" after move
         moves = []
         x = self.cord[0]
         y = self.cord[1]
@@ -16,7 +16,7 @@ class King(Piece):
         if board.is_in_check():
             ...
         else:
-            for cord in product(possible_x, possible_y):#combination of possible_x and possible_y
+            for cord in product(possible_x, possible_y):  #combination of possible_x and possible_y
                 square = board.get_square(cord)
                 if not square.piece:
                     if not square.piece.color == self.color:
