@@ -46,10 +46,8 @@ class Board:
         square = next(filter(lambda x: x.cord == cord, self.squares))
         return square
 
-    def move(self, start: tuple, target: tuple) -> bool:
-        if start[0] > 7 or start[1] > 7 or target[0] > 7 or target[1] > 7:
-            raise ValueError('cord must be in (0-7, 0-7)')
-        if not (piece := self.get_square(start).piece):
+    def move(self, start: Square, target: Square) -> bool:
+        if not (piece := start.piece):
             return False
 
         ...

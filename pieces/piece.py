@@ -8,7 +8,7 @@ class Piece:
         self.color = color
         self.cord = cord
 
-    def valid_moves(self, board: Board) -> list:
+    def possible_moves(self, board: Board) -> list:
         return []
 
 
