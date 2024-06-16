@@ -17,10 +17,9 @@ piece_alt = {
 
 class Board:
     turn = 'white'
-
+    squares = []
+    pieces = []
     def __init__(self):
-        self.squares = []
-        self.pieces = []
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
             for number in range(1, 9):
                 piece = None
@@ -49,14 +48,20 @@ class Board:
     def move(self, start: Square, target: Square) -> bool:
         if not (piece := start.piece):
             return False
-
         ...
 
-    def get_turn(self):
-        return self.turn
-
-    def is_in_check(self):
-        ...
+    def is_in_check(self, board=None):
+        if not board:
+            board = self
+        next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
+        king = next(filter(lambda x: x.color == board.turn and x.symbol == 'K', board.pieces))
+        king_square = self.get_square(king.cord)
+        next_turn_moves = []
+        for piece in next_turn_pieces:
+            next_turn_moves.extend(piece.possible_moves(self))
+        if king_square in next_turn_moves:
+            return True
+        return False
 
     def is_in_check_mate(self):
         ...
