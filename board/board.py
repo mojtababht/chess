@@ -1,6 +1,7 @@
 from . import letter_alt
 from .square import Square
 from pieces import Piece, Pawn, Knight, Bishop, Rook, Queen, King
+import copy
 
 
 piece_alt = {
@@ -19,6 +20,7 @@ class Board:
     turn = 'white'
     squares = []
     pieces = []
+
     def __init__(self):
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
             for number in range(1, 9):
@@ -50,11 +52,20 @@ class Board:
             return False
         ...
 
-    def is_in_check(self, board=None):
-        if not board:
-            board = self
-        next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
-        king = next(filter(lambda x: x.color == board.turn and x.symbol == 'K', board.pieces))
+    def valid_moves(self) -> list:
+        moves = []
+        for piece in filter(lambda x: x.color == self.turn, self.pieces):
+            for square in piece.possible_moves(self):
+                fake_board = copy.deepcopy(self)
+                fake_board.get_square(square.cord).piece = piece
+                if not fake_board.is_in_check():
+                    moves.append(square)
+                del fake_board
+        return moves
+
+    def is_in_check(self) -> bool:
+        next_turn_pieces = filter(lambda x: x.color != self.turn, self.pieces)
+        king = next(filter(lambda x: x.color == self.turn and x.symbol == 'K', self.pieces))
         king_square = self.get_square(king.cord)
         next_turn_moves = []
         for piece in next_turn_pieces:
@@ -63,5 +74,14 @@ class Board:
             return True
         return False
 
-    def is_in_check_mate(self):
-        ...
+    def is_in_check_mate(self) -> bool:
+        if self.is_in_check():
+            if not self.valid_moves():
+                return True
+        return True
+
+    def is_in_draw(self) -> bool:
+        if not self.is_in_check():
+            if not self.valid_moves():
+                return True
+        return False
