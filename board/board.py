@@ -1,6 +1,7 @@
 from . import letter_alt
 from .square import Square
 from pieces import Piece, Pawn, Knight, Bishop, Rook, Queen, King
+import copy
 
 
 piece_alt = {
@@ -17,10 +18,10 @@ piece_alt = {
 
 class Board:
     turn = 'white'
+    squares = []
+    pieces = []
 
     def __init__(self):
-        self.squares = []
-        self.pieces = []
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
             for number in range(1, 9):
                 piece = None
@@ -46,19 +47,41 @@ class Board:
         square = next(filter(lambda x: x.cord == cord, self.squares))
         return square
 
-    def move(self, start: tuple, target: tuple) -> bool:
-        if start[0] > 7 or start[1] > 7 or target[0] > 7 or target[1] > 7:
-            raise ValueError('cord must be in (0-7, 0-7)')
-        if not (piece := self.get_square(start).piece):
+    def move(self, start: Square, target: Square) -> bool:
+        if not (piece := start.piece):
             return False
-
         ...
 
-    def get_turn(self):
-        return self.turn
+    def valid_moves(self) -> list:
+        moves = []
+        for piece in filter(lambda x: x.color == self.turn, self.pieces):
+            for square in piece.possible_moves(self):
+                fake_board = copy.deepcopy(self)
+                fake_board.get_square(square.cord).piece = piece
+                if not fake_board.is_in_check():
+                    moves.append(square)
+                del fake_board
+        return moves
 
-    def is_in_check(self):
-        ...
+    def is_in_check(self) -> bool:
+        next_turn_pieces = filter(lambda x: x.color != self.turn, self.pieces)
+        king = next(filter(lambda x: x.color == self.turn and x.symbol == 'K', self.pieces))
+        king_square = self.get_square(king.cord)
+        next_turn_moves = []
+        for piece in next_turn_pieces:
+            next_turn_moves.extend(piece.possible_moves(self))
+        if king_square in next_turn_moves:
+            return True
+        return False
 
-    def is_in_check_mate(self):
-        ...
+    def is_in_check_mate(self) -> bool:
+        if self.is_in_check():
+            if not self.valid_moves():
+                return True
+        return True
+
+    def is_in_draw(self) -> bool:
+        if not self.is_in_check():
+            if not self.valid_moves():
+                return True
+        return False
