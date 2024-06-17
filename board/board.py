@@ -47,10 +47,24 @@ class Board:
         square = next(filter(lambda x: x.cord == cord, self.squares))
         return square
 
+    def rotate_turn(self):
+        if self.turn == 'white':
+            self.turn = 'black'
+        else:
+            self.turn = 'white'
+
     def move(self, start: Square, target: Square) -> bool:
-        if not (piece := start.piece):
+        if not start.piece:
             return False
-        ...
+        if self.turn == start.piece.color:
+            start.piece.move(target)
+            target.piece = start.piece
+            start.piece = None
+            self.rotate_turn()
+            return True
+        return False
+
+
 
     def valid_moves(self) -> list:
         moves = []
@@ -80,7 +94,7 @@ class Board:
                 return True
         return True
 
-    def is_in_draw(self) -> bool:
+    def is_in_draw(self) -> bool: # TODO: add repeat for draw
         if not self.is_in_check():
             if not self.valid_moves():
                 return True
