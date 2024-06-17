@@ -1,4 +1,5 @@
 from board.board import Board
+from board.square import Square
 
 
 class Piece:
@@ -10,5 +11,8 @@ class Piece:
 
     def possible_moves(self, board: Board) -> list:
         return []
+
+    def move(self, board: Board, target: Square) -> bool:
+        return False
 
 

@@ -57,14 +57,12 @@ class Board:
         if not start.piece:
             return False
         if self.turn == start.piece.color:
-            start.piece.move(target)
-            target.piece = start.piece
-            start.piece = None
-            self.rotate_turn()
-            return True
+            if start.piece.move(self, target):
+                target.piece = start.piece
+                start.piece = None
+                self.rotate_turn()
+                return True
         return False
-
-
 
     def valid_moves(self) -> list:
         moves = []
