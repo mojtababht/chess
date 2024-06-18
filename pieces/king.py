@@ -50,9 +50,9 @@ class King(Piece):
     def move(self, board: Board, target: Square) -> bool:
         self.cord = target.cord
         if not self.moved:
-            if self.cord[1] - target.cord[1] == 2:
+            if self.cord[0] - target.cord[0] == 2:
                 board.get_square((0, self.cord[1])).piece.move(board, board.get_square((2, self.cord[1])))
-            if self.cord[1] - target.cord[1] == -2:
+            if self.cord[0] - target.cord[0] == -2:
                 board.get_square((7, self.cord[1])).piece.move(board, board.get_square((4, self.cord[1])))
         self.moved = True
         return True

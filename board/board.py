@@ -70,9 +70,19 @@ class Board:
             for square in piece.possible_moves(self):
                 fake_board = copy.deepcopy(self)
                 fake_board.get_square(square.cord).piece = piece
-                if not fake_board.is_in_check():
-                    moves.append(square)
-                del fake_board
+                fake_board.get_square(piece.cord).piece = None
+                if fake_board.is_in_check():
+                    continue
+                if piece.symbol == "K":
+                    if piece.cord[0] - square.cord[0] == -2:
+                        fake_board = copy.deepcopy(self)
+                        fake_square = fake_board.get_square(piece.cord)
+                        fake_square.piece.cord = (4, piece.cord[1])
+                        fake_board.get_square((4, piece.cord[1])).piece = fake_square.piece
+                        fake_square.piece = None
+                        if fake_board.is_in_check():
+                            continue
+                moves.append(square)
         return moves
 
     def is_in_check(self) -> bool:
