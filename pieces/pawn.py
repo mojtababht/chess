@@ -1,4 +1,5 @@
 from board.board import Board
+from board.square import Square
 from .piece import Piece
 
 
@@ -38,6 +39,10 @@ class Pawn(Piece):
         if square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
             moves.append(square)
         return moves
+
+    def move(self, board: Board, target: Square) -> bool:
+        self.cord = target.cord
+        return True
 
 
 # TODO: this is a sample of async await for promotion
