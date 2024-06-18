@@ -12,7 +12,7 @@ class Piece:
     def possible_moves(self, board: Board) -> list:
         return []
 
-    def move(self, board: Board, target: Square) -> bool:
-        return False
+    def move(self, board: Board, target: Square):
+        return None
 
 

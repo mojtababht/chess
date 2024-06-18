@@ -12,6 +12,6 @@ class Queen(Piece):
         moves.extend(Bishop(self.color, self.cord).possible_moves(board))
         return moves
 
-    def move(self, board: Board, target: Square) -> bool:
+    def move(self, board: Board, target: Square):
         self.cord = target.cord
-        return True
+        return self

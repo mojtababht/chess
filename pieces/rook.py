@@ -39,7 +39,7 @@ class Rook(Piece):
             moves.append(square)
         return moves
 
-    def move(self, board: Board, target: Square) -> bool:
+    def move(self, board: Board, target: Square):
         self.cord = target.cord
         self.moved = True
-        return True
+        return self

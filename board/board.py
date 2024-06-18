@@ -57,8 +57,8 @@ class Board:
         if not start.piece:
             return False
         if self.turn == start.piece.color:
-            if start.piece.move(self, target):
-                target.piece = start.piece
+            if piece := start.piece.move(self, target):
+                target.piece = piece
                 start.piece = None
                 self.rotate_turn()
                 return True

@@ -24,6 +24,6 @@ class Knight(Piece):
             moves.append(square)
         return moves
 
-    def move(self, board: Board, target: Square) -> bool:
+    def move(self, board: Board, target: Square):
         self.cord = target.cord
-        return True
+        return self
