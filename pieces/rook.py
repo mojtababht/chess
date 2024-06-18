@@ -1,9 +1,11 @@
 from board.board import Board
+from board.square import Square
 from .piece import Piece
 
 
 class Rook(Piece):
     symbol = 'r'
+    moved = False
 
     def possible_moves(self, board: Board) -> list:
         moves = []
@@ -36,3 +38,8 @@ class Rook(Piece):
                 break
             moves.append(square)
         return moves
+
+    def move(self, board: Board, target: Square) -> bool:
+        self.cord = target.cord
+        self.moved = True
+        return True
