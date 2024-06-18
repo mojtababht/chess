@@ -1,6 +1,7 @@
 from itertools import product
 
 from board.board import Board
+from board.square import Square
 from .piece import Piece
 
 
@@ -22,3 +23,7 @@ class Knight(Piece):
                 continue
             moves.append(square)
         return moves
+
+    def move(self, board: Board, target: Square) -> bool:
+        self.cord = target.cord
+        return True
