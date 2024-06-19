@@ -1,12 +1,10 @@
-from board.board import Board
-from board.square import Square
 from .piece import Piece
 
 
 class Bishop(Piece):
     symbol = 'b'
 
-    def possible_moves(self, board: Board) -> list:
+    def possible_moves(self, board) -> list:
         moves = []
         for x, y in zip(range(self.cord[0] + 1, 8), range(self.cord[2] + 1, 8)):
             square = board.get_square((x, y))
@@ -38,6 +36,6 @@ class Bishop(Piece):
             moves.append(square)
         return moves
 
-    def move(self, board: Board, target: Square):
+    def move(self, board, target):
         self.cord = target.cord
         return self

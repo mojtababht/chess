@@ -17,7 +17,7 @@ class Square:
         return (x, y)
 
     def get_color(self):
-        odd = self.cord.count() % 2
+        odd = (self.cord[0] + self.cord[1]) % 2
         if odd:
             return 'white'
         return 'black'

@@ -1,7 +1,3 @@
-from board.board import Board
-from board.square import Square
-
-
 class Piece:
     symbol = ''
 
@@ -9,10 +5,10 @@ class Piece:
         self.color = color
         self.cord = cord
 
-    def possible_moves(self, board: Board) -> list:
+    def possible_moves(self, board) -> list:
         return []
 
-    def move(self, board: Board, target: Square):
+    def move(self, board, target):
         return None
 
 

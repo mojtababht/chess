@@ -1,7 +1,14 @@
 from . import letter_alt
-from .square import Square
-from pieces import Piece, Pawn, Knight, Bishop, Rook, Queen, King
 import copy
+
+from .square import Square
+from pieces.pawn import Pawn
+from pieces.knight import Knight
+from pieces.bishop import Bishop
+from pieces.rook import Rook
+from pieces.queen import Queen
+from pieces.king import King
+
 
 
 piece_alt = {
@@ -22,8 +29,9 @@ class Board:
     pieces = []
 
     def __init__(self):
-        for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g'):
+        for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'):
             for number in range(1, 9):
+                print(letter, number)
                 piece = None
                 if number == 1:
                     cord = (letter_alt[letter], 0)

@@ -1,6 +1,4 @@
-from board.board import Board
-from board.square import Square
-from . import Queen
+from .queen import Queen
 from .piece import Piece
 
 
@@ -9,7 +7,7 @@ class Pawn(Piece):
     initial = True
     en_passant = False
 
-    def possible_moves(self, board: Board) -> list:
+    def possible_moves(self, board) -> list:
         moves = []
         x = self.cord[0]
         y = self.cord[1]
@@ -32,7 +30,7 @@ class Pawn(Piece):
         moves.extend(self.get_attack_moves(board))
         return moves
 
-    def get_attack_moves(self, board: Board) -> list:
+    def get_attack_moves(self, board) -> list:
         moves = []
         # diagonal attack
         if self.color == 'white':
@@ -65,7 +63,7 @@ class Pawn(Piece):
                 moves.append(board.get_square((self.cord[0] - 1, self.cord[1] - 1)))
         return moves
 
-    def move(self, board: Board, target: Square):
+    def move(self, board, target):
         if self.initial:
             self.en_passant = True
         else:

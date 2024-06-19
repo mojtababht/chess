@@ -1,14 +1,12 @@
 from itertools import product
 
-from board.board import Board
-from board.square import Square
 from .piece import Piece
 
 
 class Knight(Piece):
     symbol = 'k'
 
-    def possible_moves(self, board: Board) -> list:
+    def possible_moves(self, board) -> list:
         moves = []
         x = self.cord[0]
         y = self.cord[1]
@@ -24,6 +22,6 @@ class Knight(Piece):
             moves.append(square)
         return moves
 
-    def move(self, board: Board, target: Square):
+    def move(self, board, target):
         self.cord = target.cord
         return self

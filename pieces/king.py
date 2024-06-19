@@ -1,7 +1,5 @@
 from itertools import product
 
-from board.board import Board
-from board.square import Square
 from .piece import Piece
 
 
@@ -9,7 +7,7 @@ class King(Piece):
     symbol = 'K'
     moved = False
 
-    def possible_moves(self, board: Board) -> list:
+    def possible_moves(self, board) -> list:
         moves = []
         x = self.cord[0]
         y = self.cord[1]
@@ -24,7 +22,7 @@ class King(Piece):
         moves.extend(self.get_castle_moves(board))
         return moves
 
-    def get_castle_moves(self, board:Board) -> list:
+    def get_castle_moves(self, board) -> list:
         moves = []
         if not self.moved:
             for cord in [(i, self.cord[1]) for i in range(1, self.cord[0])]:
@@ -47,7 +45,7 @@ class King(Piece):
                             moves.append(board.get_square((1, self.cord[1])))
         return moves
 
-    def move(self, board: Board, target: Square):
+    def move(self, board, target):
         self.cord = target.cord
         if not self.moved:
             if self.cord[0] - target.cord[0] == 2:
