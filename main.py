@@ -1,15 +1,56 @@
 import pygame
 from board.board import Board
-import datetime
 
-pygame.init()
-SCREEN_SIZE = 600
-SQUARE_SIZE = SCREEN_SIZE / 8
-screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
-clock = pygame.time.Clock()
+
+# color = (3, 255, 0)
+# pygame.draw.rect(screen, (186, 202, 69), rect)
+class Game:
+
+    def __init__(self, board, screen_size=600):
+        pygame.init()
+        pygame.init()
+        self.screen_size = 600
+        self.square_size = self.screen_size / 8
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size))
+        self.board = board
+        self.screen.fill("white")
+        for square in self.board.squares:
+            color = (240, 217, 181) if square.color == 'white' else (181, 136, 99)
+            rect = pygame.Rect(square.cord[0] * self.square_size, square.cord[1] * self.square_size, self.square_size, self.square_size)
+            pygame.draw.rect(self.screen, color, rect)
+            if square.piece:
+                image = pygame.image.load(square.piece.image)
+                image = pygame.transform.scale(image, (self.square_size, self.square_size))
+                image_rect = image.get_rect()
+                image_rect.center = rect.center
+                self.screen.blit(image, image_rect)
+        pygame.display.update()
+
+    def handel_click(self, event):
+        if self.board.selected_piece:
+            ...
+        else:
+            cord = (event.pos[0] // self.square_size, event.pos[1] // self.square_size)
+            square = self.board.get_square(cord)
+            if square.piece and square.piece.color == self.board.turn:
+                square.selected = True
+                self.board.selected_piece = square.piece
+                color = (3, 255, 0)
+                rect = pygame.Rect(square.cord[0] * self.square_size, square.cord[1] * self.square_size,
+                                   self.square_size, self.square_size)
+                pygame.draw.rect(self.screen, color, rect)
+                image = pygame.image.load(square.piece.image)
+                image = pygame.transform.scale(image, (self.square_size, self.square_size))
+                image_rect = image.get_rect()
+                image_rect.center = rect.center
+                self.screen.blit(image, image_rect)
+                pygame.display.update()
+
+
 running = True
 board = Board()
-screen.fill("white")
+game = Game(board)
+
 
 while running:
     # poll for events
@@ -18,40 +59,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            cord = (event.pos[0] // SQUARE_SIZE, event.pos[1] // SQUARE_SIZE)
-            board.selected_piece = None
-            for square in board.squares:
-                square.selected = False
-                if square.cord == cord:
-                    if square.piece:
-                        square.selected = True
-                        board.selected_piece = square.piece
-
-    # fill the screen with a color to wipe away anything from last frame
-
-    for square in board.squares:
-        color = (240, 217, 181) if square.color == 'white' else (181, 136, 99)
-        if square.selected:
-            color = (3, 255, 0)
-        rect = pygame.Rect(square.cord[0] * SQUARE_SIZE, square.cord[1] * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
-        pygame.draw.rect(screen, color, rect)
-        if square.piece:
-            image = pygame.image.load(square.piece.image)
-            image = pygame.transform.scale(image, (SQUARE_SIZE, SQUARE_SIZE))
-            image_rect = image.get_rect()
-            image_rect.center = rect.center
-            screen.blit(image, image_rect)
-        if square.selected:
-            for moves in square.piece.possible_moves(board):
-                rect = pygame.Rect(moves.cord[0] * SQUARE_SIZE, moves.cord[1] * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
-                pygame.draw.rect(screen, (186, 202, 69), rect)
+            game.handel_click(event)
 
 
-
-    # RENDER YOUR GAME HERE
-    pygame.display.update()
-
-    # flip() the display to put your work on screen
     pygame.display.flip()
 
 
