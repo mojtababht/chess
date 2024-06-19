@@ -42,6 +42,10 @@ while running:
             image_rect.center = rect.center
             screen.blit(image, image_rect)
         if square.selected:
+            for moves in square.piece.possible_moves(board):
+                rect = pygame.Rect(moves.cord[0] * SQUARE_SIZE, moves.cord[1] * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
+                pygame.draw.rect(screen, (186, 202, 69), rect)
+
 
 
     # RENDER YOUR GAME HERE
