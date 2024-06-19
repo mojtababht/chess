@@ -12,7 +12,7 @@ class Rook(Piece):
 
     def __init__(self, color, cord):
         super().__init__(color, cord)
-        self.image = images_path.joinpath('w_queen.png') if color == 'white' else images_path.joinpath('b_queen.png')
+        self.image = images_path.joinpath('w_rook.png') if color == 'white' else images_path.joinpath('b_rook.png')
 
     def possible_moves(self, board) -> list:
         moves = []

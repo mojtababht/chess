@@ -2,6 +2,7 @@ from . import letter_alt
 
 
 class Square:
+    selected = False
 
     def __init__(self, letter, number, piece=None):
         self.letter = letter

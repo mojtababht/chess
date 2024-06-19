@@ -27,6 +27,7 @@ class Board:
     turn = 'white'
     squares = []
     pieces = []
+    selected_piece = None
 
     def __init__(self):
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'):
