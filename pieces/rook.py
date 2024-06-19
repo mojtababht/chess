@@ -1,9 +1,18 @@
+from pathlib import Path
+
 from .piece import Piece
+
+
+images_path = Path().parent.joinpath('imgs')
 
 
 class Rook(Piece):
     symbol = 'r'
     moved = False
+
+    def __init__(self, color, cord):
+        super().__init__(color, cord)
+        self.image = images_path.joinpath('w_queen.png') if color == 'white' else images_path.joinpath('b_queen.png')
 
     def possible_moves(self, board) -> list:
         moves = []

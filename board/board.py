@@ -31,7 +31,6 @@ class Board:
     def __init__(self):
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'):
             for number in range(1, 9):
-                print(letter, number)
                 piece = None
                 if number == 1:
                     cord = (letter_alt[letter], 0)

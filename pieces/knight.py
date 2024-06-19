@@ -1,10 +1,18 @@
 from itertools import product
+from pathlib import Path
 
 from .piece import Piece
 
 
+images_path = Path().parent.joinpath('imgs')
+
+
 class Knight(Piece):
     symbol = 'k'
+
+    def __init__(self, color, cord):
+        super().__init__(color, cord)
+        self.image = images_path.joinpath('w_knight.png') if color == 'white' else images_path.joinpath('b_knight.png')
 
     def possible_moves(self, board) -> list:
         moves = []

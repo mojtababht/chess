@@ -1,8 +1,14 @@
+from pathlib import Path
 from .piece import Piece
 
+images_path = Path().parent.joinpath('imgs')
 
 class Bishop(Piece):
     symbol = 'b'
+
+    def __init__(self, color, cord):
+        super().__init__(color, cord)
+        self.image = images_path.joinpath('w_bishop.png') if color == 'white' else images_path.joinpath('b_bishop.png')
 
     def possible_moves(self, board) -> list:
         moves = []

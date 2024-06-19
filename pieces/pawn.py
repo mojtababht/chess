@@ -1,11 +1,20 @@
+from pathlib import Path
+
 from .queen import Queen
 from .piece import Piece
+
+
+images_path = Path().parent.joinpath('imgs')
 
 
 class Pawn(Piece):
     symbol = 'p'
     initial = True
     en_passant = False
+
+    def __init__(self, color, cord):
+        super().__init__(color, cord)
+        self.image = images_path.joinpath('w_pawn.png') if color == 'white' else images_path.joinpath('b_pawn.png')
 
     def possible_moves(self, board) -> list:
         moves = []
