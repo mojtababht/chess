@@ -49,9 +49,10 @@ class Board:
                     self.pieces.append(piece)
                 self.squares.append(Square(letter, number, piece))
 
-    def get_square(self, cord: tuple) -> Square:
-        if cord[0] > 7 or cord[1] > 7:
-            raise ValueError('cord must be in (0-7, 0-7)')
+    def get_square(self, cord: tuple) -> Square | None:
+        if cord[0] > 7 or cord[0] < 0 or cord[1] > 7 or cord[1] < 0:
+            return
+            # raise ValueError('cord must be in (0-7, 0-7)')
         square = next(filter(lambda x: x.cord == cord, self.squares))
         return square
 
@@ -77,7 +78,11 @@ class Board:
         for piece in filter(lambda x: x.color == self.turn, self.pieces):
             for square in piece.possible_moves(self):
                 fake_board = copy.deepcopy(self)
-                fake_board.get_square(square.cord).piece = piece
+                fake_board.pieces = copy.deepcopy(self.pieces)
+                fake_board.squares = copy.deepcopy(self.squares)
+                fake_piece = fake_board.get_square(piece.cord).piece
+                fake_piece.cord = square.cord
+                fake_board.get_square(square.cord).piece = fake_piece
                 fake_board.get_square(piece.cord).piece = None
                 if fake_board.is_in_check():
                     continue

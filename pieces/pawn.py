@@ -44,31 +44,31 @@ class Pawn(Piece):
         # diagonal attack
         if self.color == 'white':
             square = board.get_square((self.cord[0] + 1, self.cord[1] + 1))
-            if square.piece and square.piece.color != self.color:
+            if square and square.piece and square.piece.color != self.color:
                 moves.append(square)
             square = board.get_square((self.cord[0] - 1, self.cord[1] + 1))
-            if square.piece and square.piece.color != self.color:
+            if square and square.piece and square.piece.color != self.color:
                 moves.append(square)
             # en passant
             square = board.get_square((self.cord[0] + 1, self.cord[1]))
-            if square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
+            if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
                 moves.append(board.get_square((self.cord[0] + 1, self.cord[1] + 1)))
             square = board.get_square((self.cord[0] - 1, self.cord[1]))
-            if square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
+            if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
                 moves.append(board.get_square((self.cord[0] - 1, self.cord[1] + 1)))
         else:
             square = board.get_square((self.cord[0] + 1, self.cord[1] - 1))
-            if square.piece and square.piece.color != self.color:
+            if square and square.piece and square.piece.color != self.color:
                 moves.append(square)
             square = board.get_square((self.cord[0] - 1, self.cord[1] - 1))
-            if square.piece and square.piece.color != self.color:
+            if square and square.piece and square.piece.color != self.color:
                 moves.append(square)
             # en passant
             square = board.get_square((self.cord[0] + 1, self.cord[1]))
-            if square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
+            if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
                 moves.append(board.get_square((self.cord[0] + 1, self.cord[1] - 1)))
             square = board.get_square((self.cord[0] - 1, self.cord[1]))
-            if square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
+            if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
                 moves.append(board.get_square((self.cord[0] - 1, self.cord[1] - 1)))
         return moves
 

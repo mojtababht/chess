@@ -9,21 +9,16 @@ class Game:
     def __init__(self, board, screen_size=600):
         pygame.init()
         pygame.init()
-        self.screen_size = 600
+        self.screen_size = screen_size
         self.square_size = self.screen_size / 8
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size))
         self.board = board
         self.screen.fill("white")
         for square in self.board.squares:
             color = (240, 217, 181) if square.color == 'white' else (181, 136, 99)
-            rect = pygame.Rect(square.cord[0] * self.square_size, square.cord[1] * self.square_size, self.square_size, self.square_size)
-            pygame.draw.rect(self.screen, color, rect)
+            rect = self.draw_rect(square.cord, color)
             if square.piece:
-                image = pygame.image.load(square.piece.image)
-                image = pygame.transform.scale(image, (self.square_size, self.square_size))
-                image_rect = image.get_rect()
-                image_rect.center = rect.center
-                self.screen.blit(image, image_rect)
+                self.blit_image(square.piece, rect)
         pygame.display.update()
 
     def handel_click(self, event):
@@ -35,16 +30,35 @@ class Game:
             if square.piece and square.piece.color == self.board.turn:
                 square.selected = True
                 self.board.selected_piece = square.piece
-                color = (3, 255, 0)
-                rect = pygame.Rect(square.cord[0] * self.square_size, square.cord[1] * self.square_size,
-                                   self.square_size, self.square_size)
-                pygame.draw.rect(self.screen, color, rect)
-                image = pygame.image.load(square.piece.image)
-                image = pygame.transform.scale(image, (self.square_size, self.square_size))
-                image_rect = image.get_rect()
-                image_rect.center = rect.center
-                self.screen.blit(image, image_rect)
+                rect = self.draw_rect(square.cord, (3, 255, 0))
+                self.blit_image(square.piece, rect)
+                for move in square.piece.valid_moves(self.board):
+                    if move.piece:
+                        color = (236, 122, 96)
+                        rect = self.draw_rect(move.cord, color)
+                        self.blit_image(move.piece, rect)
+                    else:
+                        if move.color == 'black':
+                            color = (182, 198, 65)
+                        else:
+                            color = (200, 214, 80)
+                        self.draw_rect(move.cord, color)
                 pygame.display.update()
+
+    def blit_image(self, piece, rect):
+        image = pygame.image.load(piece.image)
+        image = pygame.transform.scale(image, (self.square_size, self.square_size))
+        image_rect = image.get_rect()
+        image_rect.center = rect.center
+        self.screen.blit(image, image_rect)
+
+    def draw_rect(self, cord, color):
+        rect = pygame.Rect(cord[0] * self.square_size, cord[1] * self.square_size,
+                           self.square_size, self.square_size)
+        pygame.draw.rect(self.screen, color, rect)
+        return rect
+
+
 
 
 running = True
