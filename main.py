@@ -42,7 +42,10 @@ class Game:
         square = self.board.get_square(cord)
         if selected_piece := self.board.selected_piece:
             if square in selected_piece.valid_moves(self.board):
-                ...
+                selected_square = self.board.get_square(selected_piece.cord)
+                self.board.move(selected_square, square)
+                self.draw_rect_for_squares(*self.board.squares)
+                pygame.display.update()
             else:
                 old_selected_square = self.board.get_square(selected_piece.cord)
                 self.draw_rect_for_squares(*selected_piece.valid_moves(self.board), old_selected_square)
