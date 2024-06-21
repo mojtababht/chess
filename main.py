@@ -23,6 +23,20 @@ class Game:
             if square.piece:
                 self.blit_image(square.piece, rect)
 
+    def highlight_squares(self, *squares):
+        for square in squares:
+            if square.piece:
+                color = (236, 122, 96)
+                rect = self.draw_rect(square.cord, color)
+                self.blit_image(square.piece, rect)
+            else:
+                if square.color == 'black':
+                    color = (182, 198, 65)
+                else:
+                    color = (200, 214, 80)
+                self.draw_rect(square.cord, color)
+
+
     def handel_click(self, event):
         cord = (event.pos[0] // self.square_size, event.pos[1] // self.square_size)
         square = self.board.get_square(cord)
@@ -37,18 +51,8 @@ class Game:
                     self.board.selected_piece = square.piece
                     rect = self.draw_rect(square.cord, (3, 255, 0))
                     self.blit_image(square.piece, rect)
-                    for move in square.piece.valid_moves(self.board):
-                        if move.piece:
-                            color = (236, 122, 96)
-                            rect = self.draw_rect(move.cord, color)
-                            self.blit_image(move.piece, rect)
-                        else:
-                            if move.color == 'black':
-                                color = (182, 198, 65)
-                            else:
-                                color = (200, 214, 80)
-                            self.draw_rect(move.cord, color)
-                    self.board.selected_piece = square.piece
+                    self.highlight_squares(*square.piece.valid_moves(self.board))
+                self.board.selected_piece = square.piece
                 old_selected_square.selected = False
         else:
             if square.piece and square.piece.color == self.board.turn:
@@ -56,17 +60,7 @@ class Game:
                 self.board.selected_piece = square.piece
                 rect = self.draw_rect(square.cord, (3, 255, 0))
                 self.blit_image(square.piece, rect)
-                for move in square.piece.valid_moves(self.board):
-                    if move.piece:
-                        color = (236, 122, 96)
-                        rect = self.draw_rect(move.cord, color)
-                        self.blit_image(move.piece, rect)
-                    else:
-                        if move.color == 'black':
-                            color = (182, 198, 65)
-                        else:
-                            color = (200, 214, 80)
-                        self.draw_rect(move.cord, color)
+                self.highlight_squares(*square.piece.valid_moves(self.board))
                 pygame.display.update()
 
     def blit_image(self, piece, rect):
