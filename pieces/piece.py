@@ -10,11 +10,7 @@ class Piece:
         return []
 
     def valid_moves(self, board):
-        moves = []
-        for move in self.possible_moves(board):
-            if move in board.valid_moves():
-                moves.append(move)
-        return moves
+        return list(set(self.possible_moves(board)).intersection(board.valid_moves()))
 
     def move(self, board, target):
         return None
