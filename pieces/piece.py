@@ -14,5 +14,3 @@ class Piece:
 
     def move(self, board, target):
         return None
-
-

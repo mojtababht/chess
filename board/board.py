@@ -89,6 +89,8 @@ class Board:
                 if piece.symbol == "K":
                     if piece.cord[0] - square.cord[0] == -2:
                         fake_board = copy.deepcopy(self)
+                        fake_board.pieces = copy.deepcopy(self.pieces)
+                        fake_board.squares = copy.deepcopy(self.squares)
                         fake_square = fake_board.get_square(piece.cord)
                         fake_square.piece.cord = (4, piece.cord[1])
                         fake_board.get_square((4, piece.cord[1])).piece = fake_square.piece
@@ -113,7 +115,7 @@ class Board:
         if self.is_in_check():
             if not self.valid_moves():
                 return True
-        return True
+        return False
 
     def is_in_draw(self) -> bool: # TODO: add repeat for draw
         if not self.is_in_check():
