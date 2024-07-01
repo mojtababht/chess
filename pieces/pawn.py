@@ -16,60 +16,60 @@ class Pawn(Piece):
         super().__init__(color, cord)
         self.image = images_path.joinpath('w_pawn.png') if color == 'white' else images_path.joinpath('b_pawn.png')
 
-    def possible_moves(self, board) -> list:
-        moves = []
+    def possible_moves(self, board):
+        moves = set()
         x = self.cord[0]
         y = self.cord[1]
         if self.color == 'white':
             square = board.get_square((x, y + 1))
             if not square.piece:
-                moves.append(square)
+                moves.add(square)
             if self.initial:
                 square = board.get_square((x, y + 2))
                 if not square.piece:
-                    moves.append(square)
+                    moves.add(square)
         else:
             square = board.get_square((x, y - 1))
             if not square.piece:
-                moves.append(square)
+                moves.add(square)
             if self.initial:
                 square = board.get_square((x, y - 2))
                 if not square.piece:
-                    moves.append(square)
-        moves.extend(self.get_attack_moves(board))
+                    moves.add(square)
+        moves.update(self.get_attack_moves(board))
         return moves
 
-    def get_attack_moves(self, board) -> list:
-        moves = []
+    def get_attack_moves(self, board):
+        moves = set()
         # diagonal attack
         if self.color == 'white':
             square = board.get_square((self.cord[0] + 1, self.cord[1] + 1))
             if square and square.piece and square.piece.color != self.color:
-                moves.append(square)
+                moves.add(square)
             square = board.get_square((self.cord[0] - 1, self.cord[1] + 1))
             if square and square.piece and square.piece.color != self.color:
-                moves.append(square)
+                moves.add(square)
             # en passant
             square = board.get_square((self.cord[0] + 1, self.cord[1]))
             if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
-                moves.append(board.get_square((self.cord[0] + 1, self.cord[1] + 1)))
+                moves.add(board.get_square((self.cord[0] + 1, self.cord[1] + 1)))
             square = board.get_square((self.cord[0] - 1, self.cord[1]))
             if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
-                moves.append(board.get_square((self.cord[0] - 1, self.cord[1] + 1)))
+                moves.add(board.get_square((self.cord[0] - 1, self.cord[1] + 1)))
         else:
             square = board.get_square((self.cord[0] + 1, self.cord[1] - 1))
             if square and square.piece and square.piece.color != self.color:
-                moves.append(square)
+                moves.add(square)
             square = board.get_square((self.cord[0] - 1, self.cord[1] - 1))
             if square and square.piece and square.piece.color != self.color:
-                moves.append(square)
+                moves.add(square)
             # en passant
             square = board.get_square((self.cord[0] + 1, self.cord[1]))
             if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
-                moves.append(board.get_square((self.cord[0] + 1, self.cord[1] - 1)))
+                moves.add(board.get_square((self.cord[0] + 1, self.cord[1] - 1)))
             square = board.get_square((self.cord[0] - 1, self.cord[1]))
             if square and square.piece and square.piece.color != self.color and square.piece.symbol == 'p' and square.piece.en_passant:
-                moves.append(board.get_square((self.cord[0] - 1, self.cord[1] - 1)))
+                moves.add(board.get_square((self.cord[0] - 1, self.cord[1] - 1)))
         return moves
 
     def move(self, board, target):

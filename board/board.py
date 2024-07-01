@@ -25,8 +25,8 @@ piece_alt = {
 
 class Board:
     turn = 'white'
-    squares = []
-    pieces = []
+    squares = set()
+    pieces = set()
     selected_piece = None
 
     def __init__(self):
@@ -46,8 +46,8 @@ class Board:
                     cord = (letter_alt[letter], 7)
                     piece = piece_alt[letter]('black', cord)
                 if piece:
-                    self.pieces.append(piece)
-                self.squares.append(Square(letter, number, piece))
+                    self.pieces.add(piece)
+                self.squares.add(Square(letter, number, piece))
 
     def get_square(self, cord: tuple) -> Square | None:
         if cord[0] > 7 or cord[0] < 0 or cord[1] > 7 or cord[1] < 0:
@@ -74,7 +74,7 @@ class Board:
         return False
 
     def valid_moves(self) -> list:
-        moves = []
+        moves = set()
         for piece in filter(lambda x: x.color == self.turn, self.pieces):
             for square in piece.possible_moves(self):
                 fake_board = copy.deepcopy(self)
@@ -97,7 +97,7 @@ class Board:
                         fake_square.piece = None
                         if fake_board.is_in_check():
                             continue
-                moves.append(square)
+                moves.add(square)
         return moves
 
     def is_in_check(self) -> bool:

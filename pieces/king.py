@@ -14,8 +14,8 @@ class King(Piece):
         super().__init__(color, cord)
         self.image = images_path.joinpath('w_king.png') if color == 'white' else images_path.joinpath('b_king.png')
 
-    def possible_moves(self, board) -> list:
-        moves = []
+    def possible_moves(self, board):
+        moves = set()
         x = self.cord[0]
         y = self.cord[1]
         possible_x = list(filter(lambda i: 7 >= i >= 0, (x - 1, x + 1)))
@@ -25,8 +25,8 @@ class King(Piece):
             if square.piece:
                 if square.piece.color == self.color:
                     continue
-            moves.append(square)
-        moves.extend(self.get_castle_moves(board))
+            moves.add(square)
+        moves.update(self.get_castle_moves(board))
         return moves
 
     def get_castle_moves(self, board) -> list:
@@ -40,7 +40,7 @@ class King(Piece):
                 if piece := rook_square.piece:
                     if piece.symbol == 'r':
                         if not piece.moved:
-                            moves.append(board.get_square((1, self.cord[1])))
+                            moves.add(board.get_square((1, self.cord[1])))
             for cord in [(i, self.cord[1]) for i in range(self.cord[0] + 1, 7)]:
                 if board.get_square(cord).piece:
                     break
@@ -49,7 +49,7 @@ class King(Piece):
                 if piece := rook_square.piece:
                     if piece.symbol == 'r':
                         if not piece.moved:
-                            moves.append(board.get_square((1, self.cord[1])))
+                            moves.add(board.get_square((1, self.cord[1])))
         return moves
 
     def valid_moves(self, board):
