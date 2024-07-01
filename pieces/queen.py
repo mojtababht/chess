@@ -16,10 +16,10 @@ class Queen(Piece):
         self.image = images_path.joinpath('w_queen.png') if color == 'white' else images_path.joinpath('b_queen.png')
 
     def possible_moves(self, board) -> set:
-        moves = []
-        moves.extend(Rook(self.color, self.cord).possible_moves(board))
-        moves.extend(Bishop(self.color, self.cord).possible_moves(board))
-        return set(moves)
+        moves = set()
+        moves.update(Rook(self.color, self.cord).possible_moves(board))
+        moves.update(Bishop(self.color, self.cord).possible_moves(board))
+        return moves
 
     def move(self, board, target):
         self.cord = target.cord

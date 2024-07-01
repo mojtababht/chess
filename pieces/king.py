@@ -29,8 +29,8 @@ class King(Piece):
         moves.update(self.get_castle_moves(board))
         return moves
 
-    def get_castle_moves(self, board) -> list:
-        moves = []
+    def get_castle_moves(self, board):
+        moves = set()
         if not self.moved:
             for cord in [(i, self.cord[1]) for i in range(1, self.cord[0])]:
                 if board.get_square(cord).piece:
@@ -55,9 +55,9 @@ class King(Piece):
     def valid_moves(self, board):
         moves = super().valid_moves(board)
         next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
-        next_turn_moves = []
+        next_turn_moves = set()
         for piece in next_turn_pieces:
-            next_turn_moves.extend(piece.possible_moves(board))
+            next_turn_moves.update(piece.possible_moves(board))
         valid_moves = set(moves) - set(next_turn_moves)
         return list(valid_moves)
 
