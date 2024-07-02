@@ -10,7 +10,11 @@ class Piece:
         return set()
 
     def valid_moves(self, board):
-        return set(self.possible_moves(board)).intersection(board.valid_moves())
+        valid_moves = set()
+        for piece, moves in board.valid_moves():
+            if piece == self:
+                return moves
+        return valid_moves
 
     def move(self, board, target):
         return None

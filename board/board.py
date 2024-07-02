@@ -1,5 +1,6 @@
 from . import letter_alt
 import copy
+from functools import lru_cache
 
 from .square import Square
 from pieces.pawn import Pawn
@@ -70,34 +71,45 @@ class Board:
                 target.piece = piece
                 start.piece = None
                 self.rotate_turn()
+                self.valid_moves.cache_clear()
                 return True
         return False
 
-    def valid_moves(self) -> list:
-        moves = set()
+    def fake_move(self, start: Square, target: Square):
+        fake_board = copy.deepcopy(self)
+        fake_board.pieces = copy.deepcopy(self.pieces)
+        fake_board.squares = copy.deepcopy(self.squares)
+        start = fake_board.get_square(start.cord)
+        target = fake_board.get_square(target.cord)
+        if fake_board.move(start, target):
+            if not fake_board.is_in_check():
+                return True
+
+    @lru_cache(1)
+    def valid_moves(self):
+        moves = []
         for piece in filter(lambda x: x.color == self.turn, self.pieces):
+            piece_moves = set()
             for square in piece.possible_moves(self):
-                fake_board = copy.deepcopy(self)
-                fake_board.pieces = copy.deepcopy(self.pieces)
-                fake_board.squares = copy.deepcopy(self.squares)
-                fake_piece = fake_board.get_square(piece.cord).piece
-                fake_piece.cord = square.cord
-                fake_board.get_square(square.cord).piece = fake_piece
-                fake_board.get_square(piece.cord).piece = None
-                if fake_board.is_in_check():
-                    continue
-                if piece.symbol == "K":
-                    if piece.cord[0] - square.cord[0] == -2:
-                        fake_board = copy.deepcopy(self)
-                        fake_board.pieces = copy.deepcopy(self.pieces)
-                        fake_board.squares = copy.deepcopy(self.squares)
-                        fake_square = fake_board.get_square(piece.cord)
-                        fake_square.piece.cord = (4, piece.cord[1])
-                        fake_board.get_square((4, piece.cord[1])).piece = fake_square.piece
-                        fake_square.piece = None
-                        if fake_board.is_in_check():
-                            continue
-                moves.add(square)
+                start_square = self.get_square(piece.cord)
+                if self.fake_move(start_square, square):
+                    piece_moves.add(square)
+                else:
+                    ...
+            if piece_moves:
+                moves.append((piece, piece_moves))
+                # if piece.symbol == "K":
+                #     if piece.cord[0] - square.cord[0] == -2:
+                #         fake_board = copy.deepcopy(self)
+                #         fake_board.pieces = copy.deepcopy(self.pieces)
+                #         fake_board.squares = copy.deepcopy(self.squares)
+                #         fake_square = fake_board.get_square(piece.cord)
+                #         fake_square.piece.cord = (4, piece.cord[1])
+                #         fake_board.get_square((4, piece.cord[1])).piece = fake_square.piece
+                #         fake_square.piece = None
+                #         if fake_board.is_in_check():
+                #             continue
+                # moves.add(square)
         return moves
 
     def is_in_check(self) -> bool:
@@ -122,3 +134,23 @@ class Board:
             if not self.valid_moves():
                 return True
         return False
+
+    def __str__(self):
+        view = [
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00'],
+            ['00', '00', '00', '00', '00', '00', '00', '00']
+        ]
+        for square in self.squares:
+            if piece := square.piece:
+                x, y = piece.cord
+                view[x][y] = piece.color[0] + piece.symbol
+        ret = ''
+        for row in view:
+            ret += f'{str(row)}, \n'
+        return ret
