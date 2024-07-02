@@ -3,6 +3,7 @@ import copy
 from functools import lru_cache
 
 from .square import Square
+from pieces.piece import Piece
 from pieces.pawn import Pawn
 from pieces.knight import Knight
 from pieces.bishop import Bishop
@@ -50,6 +51,7 @@ class Board:
                     self.pieces.add(piece)
                 self.squares.add(Square(letter, number, piece))
 
+    @lru_cache
     def get_square(self, cord: tuple) -> Square | None:
         if cord[0] > 7 or cord[0] < 0 or cord[1] > 7 or cord[1] < 0:
             return
@@ -72,6 +74,8 @@ class Board:
                 start.piece = None
                 self.rotate_turn()
                 self.valid_moves.cache_clear()
+                Piece.valid_moves.cache_clear()
+                # self.get_square.cache_clear()
                 return True
         return False
 

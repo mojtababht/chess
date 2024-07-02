@@ -42,9 +42,10 @@ class Game:
         square = self.board.get_square(cord)
         if selected_piece := self.board.selected_piece:
             if square in selected_piece.valid_moves(self.board):
+                valid_moves = selected_piece.valid_moves(self.board) # this for re drawing marked pieces not all of them
                 selected_square = self.board.get_square(selected_piece.cord)
                 self.board.move(selected_square, square)
-                self.draw_rect_for_squares(*self.board.squares)
+                self.draw_rect_for_squares(selected_square, square, *valid_moves)
                 pygame.display.update()
             else:
                 old_selected_square = self.board.get_square(selected_piece.cord)

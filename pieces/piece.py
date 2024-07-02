@@ -1,3 +1,6 @@
+from functools import lru_cache
+
+
 class Piece:
     symbol = ''
 
@@ -9,6 +12,7 @@ class Piece:
     def possible_moves(self, board) -> set:
         return set()
 
+    @lru_cache
     def valid_moves(self, board):
         valid_moves = set()
         for piece, moves in board.valid_moves():
