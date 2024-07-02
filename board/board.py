@@ -86,6 +86,7 @@ class Board:
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):
+            fake_board.rotate_turn()
             if not fake_board.is_in_check():
                 return True
 
@@ -120,11 +121,9 @@ class Board:
         next_turn_pieces = filter(lambda x: x.color != self.turn, self.pieces)
         king = next(filter(lambda x: x.color == self.turn and x.symbol == 'K', self.pieces))
         king_square = self.get_square(king.cord)
-        next_turn_moves = set()
         for piece in next_turn_pieces:
-            next_turn_moves.update(piece.possible_moves(self))
-        if king_square in next_turn_moves:
-            return True
+            if king_square in piece.possible_moves(self):
+                return True
         return False
 
     def is_in_check_mate(self) -> bool:

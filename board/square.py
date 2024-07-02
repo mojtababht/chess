@@ -22,3 +22,6 @@ class Square:
         if odd:
             return 'white'
         return 'black'
+
+    def __str__(self):
+        return str(self.cord) + str(self.piece)

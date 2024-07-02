@@ -36,7 +36,6 @@ class Game:
                     color = (200, 214, 80)
                 self.draw_rect(square.cord, color)
 
-
     def handel_click(self, event):
         cord = (event.pos[0] // self.square_size, event.pos[1] // self.square_size)
         square = self.board.get_square(cord)

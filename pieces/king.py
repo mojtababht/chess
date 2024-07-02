@@ -18,9 +18,9 @@ class King(Piece):
         moves = set()
         x = self.cord[0]
         y = self.cord[1]
-        possible_x = list(filter(lambda i: 7 >= i >= 0, (x - 1, x + 1)))
-        possible_y = list(filter(lambda i: 7 >= i >= 0, (y - 1, y + 1)))
-        for cord in product(possible_x, possible_y):  # combination of possible_x and possible_y
+        possible_x = list(filter(lambda i: 7 >= i >= 0, range(x - 1, x + 1)))
+        possible_y = list(filter(lambda i: 7 >= i >= 0, range(y - 1, y + 1)))
+        for cord in product(possible_x, possible_y): # combination of possible_x and possible_y
             square = board.get_square(cord)
             if square.piece:
                 if square.piece.color == self.color:
