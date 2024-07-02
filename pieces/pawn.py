@@ -24,18 +24,18 @@ class Pawn(Piece):
             square = board.get_square((x, y + 1))
             if not square.piece:
                 moves.add(square)
-            if self.initial:
-                square = board.get_square((x, y + 2))
-                if not square.piece:
-                    moves.add(square)
+                if self.initial:
+                    square = board.get_square((x, y + 2))
+                    if not square.piece:
+                        moves.add(square)
         else:
             square = board.get_square((x, y - 1))
             if not square.piece:
                 moves.add(square)
-            if self.initial:
-                square = board.get_square((x, y - 2))
-                if not square.piece:
-                    moves.add(square)
+                if self.initial:
+                    square = board.get_square((x, y - 2))
+                    if not square.piece:
+                        moves.add(square)
         moves.update(self.get_attack_moves(board))
         return moves
 
