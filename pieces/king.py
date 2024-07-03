@@ -18,8 +18,8 @@ class King(Piece):
         moves = set()
         x = self.cord[0]
         y = self.cord[1]
-        possible_x = list(filter(lambda i: 7 >= i >= 0, range(x - 1, x + 1)))
-        possible_y = list(filter(lambda i: 7 >= i >= 0, range(y - 1, y + 1)))
+        possible_x = list(filter(lambda i: 7 >= i >= 0, range(x - 1, x + 2)))
+        possible_y = list(filter(lambda i: 7 >= i >= 0, range(y - 1, y + 2)))
         for cord in product(possible_x, possible_y): # combination of possible_x and possible_y
             square = board.get_square(cord)
             if square.piece:
@@ -52,14 +52,14 @@ class King(Piece):
                             moves.add(board.get_square((1, self.cord[1])))
         return moves
 
-    def valid_moves(self, board):
-        moves = super().valid_moves(board)
-        next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
-        next_turn_moves = set()
-        for piece in next_turn_pieces:
-            next_turn_moves.update(piece.possible_moves(board))
-        valid_moves = set(moves) - set(next_turn_moves)
-        return list(valid_moves)
+    # def valid_moves(self, board):
+    #     moves = super().valid_moves(board)
+    #     next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
+    #     next_turn_moves = set()
+    #     for piece in next_turn_pieces:
+    #         next_turn_moves.update(piece.possible_moves(board))
+    #     valid_moves = set(moves) - set(next_turn_moves)
+    #     return list(valid_moves)
 
     def move(self, board, target):
         self.cord = target.cord
