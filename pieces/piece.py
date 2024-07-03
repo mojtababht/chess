@@ -15,9 +15,10 @@ class Piece:
     @lru_cache
     def valid_moves(self, board):
         valid_moves = set()
-        for piece, moves in board.valid_moves():
-            if piece == self:
-                return moves
+        self_square = board.get_square(self.cord)
+        for square in self.possible_moves(board):
+            if board.fake_move(self_square, square):
+                valid_moves.add(square)
         return valid_moves
 
     def move(self, board, target):

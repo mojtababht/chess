@@ -86,7 +86,7 @@ class Board:
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):
-            fake_board.rotate_turn()
+            fake_board.turn = target.piece.color
             if not fake_board.is_in_check():
                 return True
 
@@ -94,27 +94,8 @@ class Board:
     def valid_moves(self):
         moves = []
         for piece in filter(lambda x: x.color == self.turn, self.pieces):
-            piece_moves = set()
-            for square in piece.possible_moves(self):
-                start_square = self.get_square(piece.cord)
-                if self.fake_move(start_square, square):
-                    piece_moves.add(square)
-                else:
-                    ...
-            if piece_moves:
-                moves.append((piece, piece_moves))
-                # if piece.symbol == "K":
-                #     if piece.cord[0] - square.cord[0] == -2:
-                #         fake_board = copy.deepcopy(self)
-                #         fake_board.pieces = copy.deepcopy(self.pieces)
-                #         fake_board.squares = copy.deepcopy(self.squares)
-                #         fake_square = fake_board.get_square(piece.cord)
-                #         fake_square.piece.cord = (4, piece.cord[1])
-                #         fake_board.get_square((4, piece.cord[1])).piece = fake_square.piece
-                #         fake_square.piece = None
-                #         if fake_board.is_in_check():
-                #             continue
-                # moves.add(square)
+            if piece.valid_moves(self):
+                moves.append((piece, piece.valid_moves(self)))
         return moves
 
     def is_in_check(self) -> bool:
