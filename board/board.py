@@ -70,10 +70,10 @@ class Board:
             return False
         if self.turn == start.piece.color:
             if piece := start.piece.move(self, target):
+                if target.piece:
+                    self.pieces.remove(target.piece)
                 target.piece = piece
                 start.piece = None
-                if target.piece in self.pieces:
-                    self.pieces.remove(target.piece)
                 self.rotate_turn()
                 self.valid_moves.cache_clear()
                 Piece.valid_moves.cache_clear()
@@ -85,6 +85,8 @@ class Board:
         fake_board = copy.deepcopy(self)
         fake_board.pieces = copy.deepcopy(self.pieces)
         fake_board.squares = copy.deepcopy(self.squares)
+        for piece in fake_board.pieces:
+            fake_board.get_square(piece.cord).piece = piece
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):

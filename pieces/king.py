@@ -52,15 +52,6 @@ class King(Piece):
                             moves.add(board.get_square((1, self.cord[1])))
         return moves
 
-    # def valid_moves(self, board):
-    #     moves = super().valid_moves(board)
-    #     next_turn_pieces = filter(lambda x: x.color != board.turn, board.pieces)
-    #     next_turn_moves = set()
-    #     for piece in next_turn_pieces:
-    #         next_turn_moves.update(piece.possible_moves(board))
-    #     valid_moves = set(moves) - set(next_turn_moves)
-    #     return list(valid_moves)
-
     def move(self, board, target):
         self.cord = target.cord
         if not self.moved:
