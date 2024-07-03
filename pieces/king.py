@@ -9,6 +9,7 @@ images_path = Path().parent.joinpath('imgs')
 class King(Piece):
     symbol = 'K'
     moved = False
+    castle_data = {}
 
     def __init__(self, color, cord):
         super().__init__(color, cord)
@@ -32,7 +33,7 @@ class King(Piece):
     def get_castle_moves(self, board):
         moves = set()
         if not self.moved:
-            for cord in [(i, self.cord[1]) for i in range(1, self.cord[0])]:
+            for cord in [(i, self.cord[1]) for i in (1, 2, 3)]:
                 if board.get_square(cord).piece:
                     break
             else:
@@ -41,7 +42,7 @@ class King(Piece):
                     if piece.symbol == 'r':
                         if not piece.moved:
                             moves.add(board.get_square((1, self.cord[1])))
-            for cord in [(i, self.cord[1]) for i in range(self.cord[0] + 1, 7)]:
+            for cord in [(i, self.cord[1]) for i in (5, 6)]:
                 if board.get_square(cord).piece:
                     break
             else:
@@ -49,15 +50,23 @@ class King(Piece):
                 if piece := rook_square.piece:
                     if piece.symbol == 'r':
                         if not piece.moved:
-                            moves.add(board.get_square((1, self.cord[1])))
+                            moves.add(board.get_square((6, self.cord[1])))
         return moves
 
     def move(self, board, target):
-        self.cord = target.cord
         if not self.moved:
-            if self.cord[0] - target.cord[0] == 2:
-                board.get_square((0, self.cord[1])).piece.move(board, board.get_square((2, self.cord[1])))
+            if self.cord[0] - target.cord[0] == 3:
+                if piece := board.get_square((0, self.cord[1])).piece:
+                    if piece.symbol == 'r' and not piece.moved:
+                        piece.move(board, board.get_square((3, self.cord[1])))
+                        self.castle_data = {'rook': piece, 'rook_start': (0, self.cord[1]),
+                                            'rook_target': piece.cord, 'king_target': (2, self.cord[1])}
             if self.cord[0] - target.cord[0] == -2:
-                board.get_square((7, self.cord[1])).piece.move(board, board.get_square((4, self.cord[1])))
+                if piece := board.get_square((7, self.cord[1])).piece:
+                    if piece.symbol == 'r' and not piece.moved:
+                        piece.move(board, board.get_square((5, self.cord[1])))
+                        self.castle_data = {'rook': piece, 'rook_start': (0, self.cord[1]),
+                                            'rook_target': piece.cord, 'king_target': (6, self.cord[1])}
+        self.cord = target.cord
         self.moved = True
         return self

@@ -70,9 +70,18 @@ class Board:
             return False
         if self.turn == start.piece.color:
             if piece := start.piece.move(self, target):
-                if target.piece:
-                    self.pieces.remove(target.piece)
-                target.piece = piece
+                if piece.symbol == 'K':
+                    if castle_data := piece.castle_data:
+                        rook_start_square = self.get_square(castle_data['rook_start'])
+                        rook_start_square.piece = None
+                        rook_target_square = self.get_square(castle_data['rook_target'])
+                        rook_target_square.piece = castle_data['rook']
+                        king_target_square = self.get_square(castle_data['king_target'])
+                        king_target_square.piece = piece
+                else:
+                    if target.piece:
+                        self.pieces.remove(target.piece)
+                    target.piece = piece
                 start.piece = None
                 self.rotate_turn()
                 self.valid_moves.cache_clear()
@@ -90,7 +99,7 @@ class Board:
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):
-            fake_board.turn = target.piece.color
+            fake_board.rotate_turn()
             if not fake_board.is_in_check():
                 return True
 
