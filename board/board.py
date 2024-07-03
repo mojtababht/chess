@@ -72,6 +72,8 @@ class Board:
             if piece := start.piece.move(self, target):
                 target.piece = piece
                 start.piece = None
+                if target.piece in self.pieces:
+                    self.pieces.remove(target.piece)
                 self.rotate_turn()
                 self.valid_moves.cache_clear()
                 Piece.valid_moves.cache_clear()
