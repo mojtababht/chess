@@ -1,4 +1,4 @@
-from itertools import product
+from itertools import product, chain
 from pathlib import Path
 
 from .piece import Piece
@@ -32,9 +32,15 @@ class King(Piece):
 
     def get_castle_moves(self, board):
         moves = set()
+        opponent_pieces = filter(lambda x: x.color != self.color and x.symbol != 'K', board.pieces)
+        opponent_moves = [piece.possible_moves(board) for piece in opponent_pieces]
+        opponent_moves = set(chain(*opponent_moves))
         if not self.moved:
             for cord in [(i, self.cord[1]) for i in (1, 2, 3)]:
-                if board.get_square(cord).piece:
+                square = board.get_square(cord)
+                if square.piece:
+                    break
+                if square in opponent_moves:
                     break
             else:
                 rook_square = board.get_square((0, self.cord[1]))
@@ -43,7 +49,10 @@ class King(Piece):
                         if not piece.moved:
                             moves.add(board.get_square((1, self.cord[1])))
             for cord in [(i, self.cord[1]) for i in (5, 6)]:
-                if board.get_square(cord).piece:
+                square = board.get_square(cord)
+                if square.piece:
+                    break
+                if square in opponent_moves:
                     break
             else:
                 rook_square = board.get_square((7, self.cord[1]))
