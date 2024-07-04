@@ -30,6 +30,7 @@ class Board:
     squares = set()
     pieces = set()
     selected_piece = None
+    updated_squares = set()
 
     def __init__(self):
         for letter in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'):
@@ -78,10 +79,12 @@ class Board:
                         rook_target_square.piece = castle_data['rook']
                         king_target_square = self.get_square(castle_data['king_target'])
                         king_target_square.piece = piece
+                        self.updated_squares = {start, rook_start_square, rook_target_square, king_target_square}
                 else:
                     if target.piece:
                         self.pieces.remove(target.piece)
                     target.piece = piece
+                    self.updated_squares = {start, target}
                 start.piece = None
                 self.rotate_turn()
                 self.valid_moves.cache_clear()

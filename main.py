@@ -47,8 +47,7 @@ class Game:
                 valid_moves = selected_piece.valid_moves(self.board) # this for re drawing marked pieces not all of them
                 selected_square = self.board.get_square(selected_piece.cord)
                 self.board.move(selected_square, square)
-                # self.draw_rect_for_squares(selected_square, square, *valid_moves)
-                self.draw_rect_for_squares(*board.squares)
+                self.draw_rect_for_squares(*board.updated_squares, *valid_moves)
                 pygame.display.update()
             else:
                 old_selected_square = self.board.get_square(selected_piece.cord)

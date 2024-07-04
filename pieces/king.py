@@ -65,7 +65,7 @@ class King(Piece):
                 if piece := board.get_square((7, self.cord[1])).piece:
                     if piece.symbol == 'r' and not piece.moved:
                         piece.move(board, board.get_square((5, self.cord[1])))
-                        self.castle_data = {'rook': piece, 'rook_start': (0, self.cord[1]),
+                        self.castle_data = {'rook': piece, 'rook_start': (7, self.cord[1]),
                                             'rook_target': piece.cord, 'king_target': (6, self.cord[1])}
         self.cord = target.cord
         self.moved = True
