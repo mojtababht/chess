@@ -13,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size))
         self.board = board
         self.screen.fill("white")
-        self.draw_rect_for_squares(*self.board.squares)
+        self.draw_rect_for_squares(*self.board.squares.values())
         pygame.display.update()
 
     def transform_cord(self, cord):

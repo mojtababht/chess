@@ -27,8 +27,7 @@ piece_alt = {
 
 class Board:
     turn = 'white'
-    squares = set()
-    pieces = set()
+    squares = {}
     selected_piece = None
     updated_squares = set()
 
@@ -48,17 +47,24 @@ class Board:
                 elif number == 8:
                     cord = (letter_alt[letter], 7)
                     piece = piece_alt[letter]('black', cord)
-                if piece:
-                    self.pieces.add(piece)
-                self.squares.add(Square(letter, number, piece))
+                self.squares[(letter_alt[letter], number - 1)] = (Square(letter, number, piece))
 
     @lru_cache
     def get_square(self, cord: tuple) -> Square | None:
         if cord[0] > 7 or cord[0] < 0 or cord[1] > 7 or cord[1] < 0:
             return
             # raise ValueError('cord must be in (0-7, 0-7)')
-        square = next(filter(lambda x: x.cord == cord, self.squares))
+        square = self.squares[cord]
         return square
+
+    def get_pieces(self, color=None):
+        if color:
+            color = (color,)
+        else:
+            color = ('white', 'black')
+        pieces = map(lambda s: s.piece, self.squares.values())
+        pieces = filter(lambda p: p and p.color in color, pieces)
+        return set(pieces)
 
     def rotate_turn(self):
         if self.turn == 'white':
@@ -81,8 +87,6 @@ class Board:
                         king_target_square.piece = piece
                         self.updated_squares = {start, rook_start_square, rook_target_square, king_target_square}
                 else:
-                    if target.piece:
-                        self.pieces.remove(target.piece)
                     target.piece = piece
                     self.updated_squares = {start, target}
                 start.piece = None
@@ -95,10 +99,9 @@ class Board:
 
     def fake_move(self, start: Square, target: Square):
         fake_board = copy.deepcopy(self)
-        fake_board.pieces = copy.deepcopy(self.pieces)
         fake_board.squares = copy.deepcopy(self.squares)
-        for piece in fake_board.pieces:
-            fake_board.get_square(piece.cord).piece = piece
+        # for piece in fake_board.pieces:
+        #     fake_board.get_square(piece.cord).piece = piece
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):
@@ -109,15 +112,21 @@ class Board:
     @lru_cache(1)
     def valid_moves(self):
         moves = []
-        for piece in filter(lambda x: x.color == self.turn, self.pieces):
+        for piece in self.get_pieces(self.turn):
             if piece.valid_moves(self):
                 moves.append((piece, piece.valid_moves(self)))
         return moves
 
     def is_in_check(self) -> bool:
-        next_turn_pieces = filter(lambda x: x.color != self.turn, self.pieces)
-        king = next(filter(lambda x: x.color == self.turn and x.symbol == 'K', self.pieces))
-        king_square = self.get_square(king.cord)
+        if self.turn == 'black':
+            color = 'white'
+        else:
+            color = 'black'
+        next_turn_pieces = self.get_pieces(color)
+        king_square = next(filter(lambda s: s.piece and
+                                            s.piece.symbol == 'K' and
+                                            s.piece.color == self.turn,
+                                  self.squares.values()))
         for piece in next_turn_pieces:
             if king_square in piece.possible_moves(self):
                 return True

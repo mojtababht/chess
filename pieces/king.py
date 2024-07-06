@@ -32,7 +32,7 @@ class King(Piece):
 
     def get_castle_moves(self, board):
         moves = set()
-        opponent_pieces = filter(lambda x: x.color != self.color and x.symbol != 'K', board.pieces)
+        opponent_pieces = filter(lambda x: x and x.color != self.color and x.symbol != 'K', map(lambda s: s.piece, board.squares.values()))
         opponent_moves = [piece.possible_moves(board) for piece in opponent_pieces]
         opponent_moves = set(chain(*opponent_moves))
         if not self.moved:
