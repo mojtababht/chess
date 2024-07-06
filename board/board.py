@@ -106,10 +106,14 @@ class Board:
         fake_board.squares = copy.deepcopy(self.squares)
         fake_pieces = copy.deepcopy(self.get_pieces())
         for piece in fake_pieces:
-            s = fake_board.get_square(piece.cord)
-            s.piece = piece
-        start = fake_board.get_square(start.cord)
-        target = fake_board.get_square(target.cord)
+            fake_board.squares[piece.cord].piece = piece
+            if piece.symbol == 'K':
+                if piece.color == 'white':
+                    fake_board.white_king = piece
+                else:
+                    fake_board.black_king = piece
+        start = fake_board.squares[start.cord]
+        target = fake_board.squares[target.cord]
         if fake_board.move(start, target):
             fake_board.rotate_turn()
             if not fake_board.is_in_check():
