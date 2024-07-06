@@ -38,6 +38,8 @@ class Board:
                 if number == 1:
                     cord = (letter_alt[letter], 0)
                     piece = piece_alt[letter]('white', cord)
+                    if piece.symbol == 'K':
+                        self.white_king = piece
                 elif number == 2:
                     cord = (letter_alt[letter], 1)
                     piece = Pawn('white', cord)
@@ -47,6 +49,8 @@ class Board:
                 elif number == 8:
                     cord = (letter_alt[letter], 7)
                     piece = piece_alt[letter]('black', cord)
+                    if piece.symbol == 'K':
+                        self.black_king = piece
                 self.squares[(letter_alt[letter], number - 1)] = (Square(letter, number, piece))
 
     @lru_cache
@@ -77,15 +81,15 @@ class Board:
             return False
         if self.turn == start.piece.color:
             if piece := start.piece.move(self, target):
-                if piece.symbol == 'K':
-                    if castle_data := piece.castle_data:
-                        rook_start_square = self.get_square(castle_data['rook_start'])
-                        rook_start_square.piece = None
-                        rook_target_square = self.get_square(castle_data['rook_target'])
-                        rook_target_square.piece = castle_data['rook']
-                        king_target_square = self.get_square(castle_data['king_target'])
-                        king_target_square.piece = piece
-                        self.updated_squares = {start, rook_start_square, rook_target_square, king_target_square}
+                if piece.symbol == 'K' and piece.castle_data:
+                    castle_data = piece.castle_data
+                    rook_start_square = self.get_square(castle_data['rook_start'])
+                    rook_start_square.piece = None
+                    rook_target_square = self.get_square(castle_data['rook_target'])
+                    rook_target_square.piece = castle_data['rook']
+                    king_target_square = self.get_square(castle_data['king_target'])
+                    king_target_square.piece = piece
+                    self.updated_squares = {start, rook_start_square, rook_target_square, king_target_square}
                 else:
                     target.piece = piece
                     self.updated_squares = {start, target}
@@ -100,8 +104,10 @@ class Board:
     def fake_move(self, start: Square, target: Square):
         fake_board = copy.deepcopy(self)
         fake_board.squares = copy.deepcopy(self.squares)
-        # for piece in fake_board.pieces:
-        #     fake_board.get_square(piece.cord).piece = piece
+        fake_pieces = copy.deepcopy(self.get_pieces())
+        for piece in fake_pieces:
+            s = fake_board.get_square(piece.cord)
+            s.piece = piece
         start = fake_board.get_square(start.cord)
         target = fake_board.get_square(target.cord)
         if fake_board.move(start, target):
@@ -123,10 +129,8 @@ class Board:
         else:
             color = 'black'
         next_turn_pieces = self.get_pieces(color)
-        king_square = next(filter(lambda s: s.piece and
-                                            s.piece.symbol == 'K' and
-                                            s.piece.color == self.turn,
-                                  self.squares.values()))
+        king = eval(f'self.{self.turn}_king')
+        king_square = self.get_square(king.cord)
         for piece in next_turn_pieces:
             if king_square in piece.possible_moves(self):
                 return True
